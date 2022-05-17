@@ -38,7 +38,7 @@ void store_line_to_filesystem(
     std::string line,
     std::string key
 ) {
-    std::string output_file_path = "./ouptut/" + key + ".txt";
+    std::string output_file_path = "./output/" + key + ".txt";
     std::fstream file_conn;
     file_conn.open(output_file_path, std::ios_base::app | std::ios_base::in);
     if (file_conn.is_open()) {
@@ -88,6 +88,12 @@ void extract_keyed_comment_blocks(
             update_key_data(
                 key, line_no, key_set, start_line_nos, stop_line_nos
             );
+            std::cout << "key_set = ";
+            for (std::string key_ : key_set) {
+                std::cout << key << " ";
+            }
+            std::cout << "\n";
+            
         } else {
             for (std::string key : key_set) {
                 store_line(clean_comment_line(line), key);
@@ -115,6 +121,9 @@ std::regex __KEY_PREFIX_CPP_REGEX = std::regex(__KEY_PREFIX_CPP);
 std::string extract_key_cpp(std::string line) {
     return(std::regex_replace(line, __KEY_PREFIX_CPP_REGEX, ""));
 }
+void store_line_to_console(std::string line, std::string key) {
+    std::cout << "key = " << key << "; line = " << line << "\n";
+}
 void extract_keyed_comment_blocks_using_regexes(
     std::string                                             file_path
 ) {
@@ -123,7 +132,7 @@ void extract_keyed_comment_blocks_using_regexes(
         detect_comment_line_cpp,
         clean_comment_line_cpp,
         extract_key_cpp,
-        store_line_to_filesystem
+        store_line_to_console
     );
 }
 
