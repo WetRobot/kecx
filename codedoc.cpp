@@ -6,45 +6,8 @@
 #include <functional>
 #include <regex>
 #include <sys/stat.h>
+#include <cassert>
 
-bool update_key_data(
-    std::string                 key,
-    int                         line_no,
-    std::vector<std::string>    key_set, 
-    std::vector<int>            start_line_nos,
-    std::vector<int>            stop_line_nos
-) {
-    bool was_in_set = false;
-    if (key != "") {
-        for (int i = 0; i < key_set.size(); i++) {
-            if (key_set[i] == key) {
-                was_in_set = true;
-                key_set.erase(key_set.begin() + i);
-                start_line_nos.erase(start_line_nos.begin() + i);
-                stop_line_nos.erase(stop_line_nos.begin() + i);
-                break;
-            }
-        }
-        if (!was_in_set) {
-            key_set.push_back(key);
-            start_line_nos.push_back(line_no);
-            stop_line_nos.push_back(-1);
-        }
-    }
-    return(was_in_set);
-}
-
-void store_line_to_filesystem(
-    std::string line,
-    std::string key
-) {
-    std::string output_file_path = "./output/" + key + ".txt";
-    std::fstream file_conn;
-    file_conn.open(output_file_path, std::ios_base::app | std::ios_base::in);
-    if (file_conn.is_open()) {
-        file_conn << line << std::endl;
-    }
-}
 
 inline bool file_exists (const std::string& name) {
   struct stat buffer;   
@@ -53,24 +16,16 @@ inline bool file_exists (const std::string& name) {
 
 void extract_keyed_comment_blocks(
     std::string                                         file_path,
-    std::function<bool(std::string)>                    detect_comment_line,
-    std::function<std::string(std::string)>             clean_comment_line,
+    std::function<std::string(std::string)>             extract_comment_contents,
     std::function<std::string(std::string)>             extract_key,
     std::function<void(std::string line, std::string key)>   store_line
 ) {
+    assert(file_exists(file_path));
     std::ifstream file(file_path);
-    std::vector<int> start_line_nos;
-    std::vector<int> stop_line_nos;
     std::vector<std::string> update_key;
     std::vector<std::string> key_set;
     int line_no = -1;
     std::string line;
-    std::cout << "file_path = " << file_path << "\n";
-    if (!file_exists(file_path)) {
-        std::cout << "file does not exist\n";
-    } else {
-        std::cout << "file does exist\n";
-    }
     while (std::getline(file, line)) {
         // @codedoc_comment_block extract_keyed_comment_blocks
         // Function `extract_keyed_comment_blocks` goes through the file
@@ -79,8 +34,8 @@ void extract_keyed_comment_blocks(
         // returns `true` for the line.
         // @codedoc_comment_block extract_keyed_comment_blocks
         line_no += 1;
-        bool include = detect_comment_line(line);
-        if (!include) {
+        std::string contents = extract_comment_contents(line);
+        if (contents == "") {
             continue;
         }
         // @codedoc_comment_block extract_keyed_comment_blocks
@@ -96,15 +51,35 @@ void extract_keyed_comment_blocks(
             // it is the start of a block.
             // Otherwise it is the end of a block.
             // @codedoc_comment_block extract_keyed_comment_blocks 
-            update_key_data(
-                key, line_no, key_set, start_line_nos, stop_line_nos
-            );       
+            bool key_was_in_set = false;
+            for (int i = 0; i < key_set.size(); i++) {
+                if (key == key_set[i]) {
+                    key_set.erase(key_set.begin() + i);
+                    key_was_in_set = true;
+                    break;
+                }
+            }
+            if (!key_was_in_set) {
+                key_set.push_back(key);
+            }
         } else {
-            std::cout << "\n";
-            for (std::string key : key_set) {
-                store_line(clean_comment_line(line), key);
+            for (std::string key_ : key_set) {
+                store_line(contents, key_);
             }
         }
+    }
+}
+
+// store to filesystem ---------------------------------------------------------
+void store_line_to_filesystem(
+    std::string line,
+    std::string key
+) {
+    std::string output_file_path = "./output/" + key + ".txt";
+    std::fstream file_conn;
+    file_conn.open(output_file_path, std::ios_base::app | std::ios_base::in);
+    if (file_conn.is_open()) {
+        file_conn << line << std::endl;
     }
 }
 
@@ -116,35 +91,54 @@ std::regex __COMMENT_LINE_CPP_CONTENT_REGEX = std::regex(__COMMENT_LINE_CPP_CONT
 std::regex __COMMENT_LINE_CPP_REGEX = std::regex(
     __COMMENT_LINE_CPP_PREFIX + __COMMENT_LINE_CPP_CONTENT
 );
-bool detect_comment_line_cpp(std::string line) {
-    return(std::regex_match(line, __COMMENT_LINE_CPP_REGEX));
-}
 std::string clean_comment_line_cpp(std::string line) {
     return(std::regex_replace(line, __COMMENT_LINE_CPP_PREFIX_REGEX, ""));
 }
+
+std::string extract_comment_contents_cpp(std::string line) {
+    std::string clean_line = clean_comment_line_cpp(line);
+    std::string out = "";
+    if (clean_line != line) {
+        out = clean_line;
+    }
+    return(out);
+}
+
 std::string __KEY_PREFIX_CPP = __COMMENT_LINE_CPP_PREFIX + "@codedoc_comment_block[ ]+";
 std::regex __KEY_PREFIX_CPP_REGEX = std::regex(__KEY_PREFIX_CPP);
 std::string extract_key_cpp(std::string line) {
-    return(std::regex_replace(line, __KEY_PREFIX_CPP_REGEX, ""));
+    std::string clean_line = std::regex_replace(line, __KEY_PREFIX_CPP_REGEX, "");
+    std::string key = "";
+    if (line != clean_line) {
+        key = clean_line;
+    }
+    std::cout << "extract_key_cpp: key = " << key << "\n";
+    std::cout << "extract_key_cpp: key.length() = " << key.length() << "\n";
+    return(key);
 }
+
 void store_line_to_console(std::string line, std::string key) {
-    std::cout << "key = " << key << "; line = " << line << "\n";
+    std::cout << "key = " << key << "\n";
+    std::cout << "line = " << line << "\n";
 }
+
 void extract_keyed_comment_blocks_using_regexes(
     std::string file_path
 ) {
     extract_keyed_comment_blocks(
         file_path,
-        detect_comment_line_cpp,
-        clean_comment_line_cpp,
+        extract_comment_contents_cpp,
         extract_key_cpp,
-        store_line_to_console
+        store_line_to_filesystem
     );
 }
 
-#include <cassert>
 int main() { 
-    assert(detect_comment_line_cpp(" // comment"));
+    assert(extract_comment_contents_cpp("// @codedoc_comment_block key1") == "@codedoc_comment_block key1");
+    assert(extract_comment_contents_cpp("// comment line 1") == "comment line 1");
+    assert(extract_key_cpp("// @codedoc_comment_block key1") == "key1");
+    assert(extract_key_cpp("// comment line 1") == "");
+    assert(extract_key_cpp("not a comment") == "");
     extract_keyed_comment_blocks_using_regexes("examples/input1.cpp");    
     return(0);
 }
