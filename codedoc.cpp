@@ -5,14 +5,30 @@
 #include <vector>
 #include <functional>
 #include <regex>
-#include <sys/stat.h>
 #include <cassert>
 
-
+// utils -----------------------------------------------------------------------
+#include <sys/stat.h>
 inline bool file_exists (const std::string& name) {
   struct stat buffer;   
   return (stat (name.c_str(), &buffer) == 0); 
 }
+
+std::string regex_extract_group_i(
+    std::string x,
+    std::regex re,
+    int i
+) {
+    assert(i >= 0);
+    std::smatch matched_groups;
+    std::string out = "";
+    if (std::regex_search(x, matched_groups, re) == true) {
+        out = matched_groups.str(i + 1);
+    }
+    return(out);
+}
+
+// main function ---------------------------------------------------------------
 
 void extract_keyed_comment_blocks(
     std::string                                         file_path,
@@ -29,28 +45,20 @@ void extract_keyed_comment_blocks(
     while (std::getline(file, line)) {
         // @codedoc_comment_block extract_keyed_comment_blocks
         // Function `extract_keyed_comment_blocks` goes through the file
-        // at `file_path` one line at a time. A line can only be
-        // in a comment block if the callback function `detect_comment_line`
-        // returns `true` for the line.
+        // at `file_path` one line at a time.
+        // 
+        // The last character is always removed from a line using
+        // `pop_back` because the last character is the line end character
+        // which we never want to include anyway.
         // @codedoc_comment_block extract_keyed_comment_blocks
         line_no += 1;
+        line.pop_back(); 
         std::string contents = extract_comment_contents(line);
         if (contents == "") {
             continue;
         }
-        // @codedoc_comment_block extract_keyed_comment_blocks
-        // If `include` has returned `true`, a key is attempted to be
-        // extracted from the line.
-        // @codedoc_comment_block extract_keyed_comment_blocks
         std::string key = extract_key(line);       
         if (key != "") {
-            // @codedoc_comment_block extract_keyed_comment_blocks
-            // If `key != ""` for a given line, either the start or end of a
-            // comment block has been encountered. If `key` has been found
-            // an even (or zero) number of times before this time, 
-            // it is the start of a block.
-            // Otherwise it is the end of a block.
-            // @codedoc_comment_block extract_keyed_comment_blocks 
             bool key_was_in_set = false;
             for (int i = 0; i < key_set.size(); i++) {
                 if (key == key_set[i]) {
@@ -85,36 +93,22 @@ void store_line_to_filesystem(
 
 // using regexes ---------------------------------------------------------------
 std::string __COMMENT_LINE_CPP_PREFIX = "^([ ]*[/]{2,}[ ]*)";
-std::regex __COMMENT_LINE_CPP_PREFIX_REGEX = std::regex(__COMMENT_LINE_CPP_PREFIX);
-std::string __COMMENT_LINE_CPP_CONTENT = "(.+)$";
-std::regex __COMMENT_LINE_CPP_CONTENT_REGEX = std::regex(__COMMENT_LINE_CPP_CONTENT);
 std::regex __COMMENT_LINE_CPP_REGEX = std::regex(
-    __COMMENT_LINE_CPP_PREFIX + __COMMENT_LINE_CPP_CONTENT
+    __COMMENT_LINE_CPP_PREFIX + 
+    "(.+)$"
 );
-std::string clean_comment_line_cpp(std::string line) {
-    return(std::regex_replace(line, __COMMENT_LINE_CPP_PREFIX_REGEX, ""));
-}
 
 std::string extract_comment_contents_cpp(std::string line) {
-    std::string clean_line = clean_comment_line_cpp(line);
-    std::string out = "";
-    if (clean_line != line) {
-        out = clean_line;
-    }
-    return(out);
+    return(regex_extract_group_i(line, __COMMENT_LINE_CPP_REGEX, 1));
 }
 
-std::string __KEY_PREFIX_CPP = __COMMENT_LINE_CPP_PREFIX + "@codedoc_comment_block[ ]+";
-std::regex __KEY_PREFIX_CPP_REGEX = std::regex(__KEY_PREFIX_CPP);
+std::regex __KEY_CPP_REGEX = std::regex(
+    __COMMENT_LINE_CPP_PREFIX + 
+    "(@codedoc_comment_block[ ]+)" + 
+    "(.+)"
+);
 std::string extract_key_cpp(std::string line) {
-    std::string clean_line = std::regex_replace(line, __KEY_PREFIX_CPP_REGEX, "");
-    std::string key = "";
-    if (line != clean_line) {
-        key = clean_line;
-    }
-    std::cout << "extract_key_cpp: key = " << key << "\n";
-    std::cout << "extract_key_cpp: key.length() = " << key.length() << "\n";
-    return(key);
+    return(regex_extract_group_i(line, __KEY_CPP_REGEX, 2));
 }
 
 void store_line_to_console(std::string line, std::string key) {
@@ -136,9 +130,16 @@ void extract_keyed_comment_blocks_using_regexes(
 int main() { 
     assert(extract_comment_contents_cpp("// @codedoc_comment_block key1") == "@codedoc_comment_block key1");
     assert(extract_comment_contents_cpp("// comment line 1") == "comment line 1");
+    assert(extract_comment_contents_cpp("not a comment") == "");
+
     assert(extract_key_cpp("// @codedoc_comment_block key1") == "key1");
     assert(extract_key_cpp("// comment line 1") == "");
     assert(extract_key_cpp("not a comment") == "");
+
+    assert(regex_extract_group_i("abc", std::regex("(a)(b)(c)"), 0) == "a");
+    assert(regex_extract_group_i("abc", std::regex("(a)(b)(c)"), 1) == "b");
+    assert(regex_extract_group_i("abc", std::regex("(a)(b)(c)"), 2) == "c");
+
     extract_keyed_comment_blocks_using_regexes("examples/input1.cpp");    
     return(0);
 }
