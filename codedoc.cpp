@@ -78,7 +78,7 @@ void extract_keyed_comment_blocks(
     }
 }
 
-// store to filesystem ---------------------------------------------------------
+// storage ---------------------------------------------------------------------
 void store_line_to_filesystem(
     std::string line,
     std::string key
@@ -88,6 +88,38 @@ void store_line_to_filesystem(
     file_conn.open(output_file_path, std::ios_base::app | std::ios_base::in);
     if (file_conn.is_open()) {
         file_conn << line << std::endl;
+    }
+}
+
+void store_line_to_console(std::string line, std::string key) {
+    std::cout << "key = " << key << "\n";
+    std::cout << "line = " << line << "\n";
+}
+
+std::vector<std::vector<std::string>> __LINES_BY_KEY;
+std::vector<std::string> __KEY_SET;
+void store_line_to_memory(
+    std::string line,
+    std::string key
+) {
+    int key_no = -1;
+    bool found_key = false;
+    for (int i = 0; i < __KEY_SET.size(); i++) {
+        key_no += 1;
+        std::string key_ = __KEY_SET[i];
+        if (key == key_) {
+            found_key = true;
+            break;
+        }
+    }
+    if (found_key) {
+        std::vector<std::string> lines = __LINES_BY_KEY[key_no];
+        lines.push_back(line);
+    } else {
+        __KEY_SET.push_back(key);
+        std::vector<std::string> lines;
+        lines.push_back(line);
+        __LINES_BY_KEY.push_back(lines);
     }
 }
 
@@ -111,10 +143,6 @@ std::string extract_key_cpp(std::string line) {
     return(regex_extract_group_i(line, __KEY_CPP_REGEX, 2));
 }
 
-void store_line_to_console(std::string line, std::string key) {
-    std::cout << "key = " << key << "\n";
-    std::cout << "line = " << line << "\n";
-}
 
 void extract_keyed_comment_blocks_using_regexes(
     std::string file_path
