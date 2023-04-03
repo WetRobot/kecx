@@ -2,7 +2,7 @@
 #include<vector>
 #include<string>
 
-#include "../include/codedoc/codedoc.hpp"
+#include "./include/codedoc/codedoc.hpp"
 
 int main() {
     std::vector<std::string> ho   = {"@chunk"};
@@ -10,7 +10,7 @@ int main() {
     std::vector<std::string> hf_f = {"@stop"};
     std::vector<std::string> e    = {"@block"};
     codedoc::extract::extract(
-        "examples/data/input_01.cpp",
+        "data/input_01.cpp",
         "[/][*]",
         "[*][/]",
         "//",
@@ -18,7 +18,7 @@ int main() {
         hf_h,
         hf_f,
         e,
-        "./output/",
+        "../output/",
         true,
         false,
         false

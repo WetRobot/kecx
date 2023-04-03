@@ -22,7 +22,6 @@ namespace store{
         const std::string& line,
         const int& line_no
     ) {
-        std::string output_file_path = "./output/" + key + ".txt";
         std::fstream file_connection;
         file_connection.open(
             output_file_path,
