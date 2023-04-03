@@ -1,9 +1,12 @@
 #ifndef UTILS
 #define UTILS
+
 #include <string>
 #include <vector>
-#include <regex>
+#include <fstream>
 #include <iostream>
+#include <regex>
+#include <functional>
 
 namespace utils{
     template<typename T>

@@ -3,8 +3,12 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <iostream>
+#include <regex>
+#include <functional>
 
-#include "utils.hpp"
+#include "misc_utils.hpp"
 
 namespace keysets{
     class KeyAlreadyExiscodedocxception : public std::exception {

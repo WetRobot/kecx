@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iostream>
+#include <regex>
+#include <functional>
 
 namespace store{
 
@@ -13,9 +16,9 @@ namespace store{
             const std::string& line,
             const int& line_no
         )>
-        cb_store_type;
+        store_type;
     
-    void cb_store_default(
+    void store_default(
         const std::string& key,
         const std::string& line,
         const int& line_no
@@ -31,7 +34,7 @@ namespace store{
         }
     }
 
-    auto cb_store_to_txt_factory(std::string output_dir_path) {
+    auto store_to_txt_factory(std::string output_dir_path) {
         return [&](
             const std::string& key,
             const std::string& line,

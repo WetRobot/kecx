@@ -2,13 +2,13 @@
 #define EXTRACT
 
 #include <string>
-#include <functional>
 #include <vector>
 #include <fstream>
 #include <iostream>
 #include <regex>
+#include <functional>
 
-#include "utils.hpp"
+#include "misc_utils.hpp"
 #include "keysets.hpp"
 #include "store.hpp"
 
@@ -23,7 +23,7 @@ namespace extract {
         const std::vector<std::string>& header_tag_set,
         const std::vector<std::string>& footer_tag_set,
         const std::vector<std::string>& either_tag_set,
-        const store::cb_store_type& cb_store = store::cb_store_default,
+        const store::store_type& store = store::store_default,
         const bool& store_only_comments_ho = true,
         const bool& store_only_comments_hf = true,
         const bool& store_only_comments_e = true
@@ -182,17 +182,17 @@ namespace extract {
                 }
                 if (is_comment_line || !store_only_comments_ho) {
                     for (std::string key : key_set_ho.get()) {
-                        cb_store(key, line, line_no);
+                        store(key, line, line_no);
                     }
                 }
                 if (is_comment_line || !store_only_comments_hf) {
                     for (std::string key : key_set_hf.get()) {
-                        cb_store(key, line, line_no);
+                        store(key, line, line_no);
                     }
                 }
                 if (is_comment_line || !store_only_comments_e) {
                     for (std::string key : key_set_e.get()) {
-                        cb_store(key, line, line_no);
+                        store(key, line, line_no);
                     }
                 }
             }
@@ -202,6 +202,33 @@ namespace extract {
         if (key_set_hf_at_end.size() > 0) {
             throw keysets::KeySetNotEmptyException(key_set_hf_at_end);
         }
+    }
+    
+    void extract(
+        const std::string& file_path,
+        const std::string& multiline_comment_start,
+        const std::string& multiline_comment_stop,
+        const std::string& singleline_comment,
+        const std::vector<std::string>& header_only_tag_set,
+        const std::vector<std::string>& header_tag_set,
+        const std::vector<std::string>& footer_tag_set,
+        const std::vector<std::string>& either_tag_set,
+        const std::string& store,
+        const bool& store_only_comments_ho = true,
+        const bool& store_only_comments_hf = true,
+        const bool& store_only_comments_e = true
+    ) {
+        extract(
+            file_path,
+            multiline_comment_start,
+            multiline_comment_stop,
+            singleline_comment,
+            header_only_tag_set,
+            header_tag_set,
+            footer_tag_set,
+            either_tag_set,
+            store::store_to_txt_factory(store)
+        );
     }
 }
 
