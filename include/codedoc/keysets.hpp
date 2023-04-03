@@ -1,5 +1,5 @@
-#ifndef KEYSETS
-#define KEYSETS
+#ifndef KEYSETS_HPP
+#define KEYSETS_HPP
 
 #include <string>
 #include <vector>

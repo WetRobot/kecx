@@ -1,5 +1,5 @@
-#ifndef EXTRACT
-#define EXTRACT
+#ifndef EXTRACT_HPP
+#define EXTRACT_HPP
 
 #include <string>
 #include <vector>
@@ -230,6 +230,6 @@ namespace extract {
             store::store_to_txt_factory(store)
         );
     }
-}
+} // namespace extract
 
 #endif

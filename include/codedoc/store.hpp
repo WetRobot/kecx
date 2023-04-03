@@ -1,5 +1,5 @@
-#ifndef STORE
-#define STORE
+#ifndef STORE_HPP
+#define STORE_HPP
 
 #include <string>
 #include <vector>
@@ -9,7 +9,6 @@
 #include <functional>
 
 namespace store{
-
     typedef
         std::function<void(
             const std::string& key,
@@ -52,5 +51,6 @@ namespace store{
             }
         };
     }
-}
+} // namespace store
+
 #endif

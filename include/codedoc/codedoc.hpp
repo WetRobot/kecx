@@ -1,9 +1,12 @@
-#ifndef CODEDOC
-#define CODEDOC
+#ifndef CODEDOC_HPP
+#define CODEDOC_HPP
+
+#include "store.hpp"
+#include "extract.hpp"
 
 namespace codedoc {
-    #include "store.hpp"
-    #include "extract.hpp"
+    namespace store = store;
+    namespace extract = extract;
 }
 
 #endif
