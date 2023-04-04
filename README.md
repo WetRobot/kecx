@@ -42,6 +42,34 @@ and arg `store`.
 
 ### Single file, arbitrary store callback function `store`
 ```
+*
+     * @brief
+     * Extract commented documentation from text file.
+     * @param file_path
+     * Path to file from which to extract documentation.
+     * @param multiline_comment_start
+     * Regex to identify multiline comment starts, e.g. "[/][*]".
+     * @param multiline_comment_stop
+     * Regex to identify multiline comment stops, e.g. "[*][/]".
+     * @param singleline_comment
+     * Regex to identify single line comments, e.g. "".
+     * @param header_only_tag_set
+     * @param header_tag_set
+     * @param footer_tag_set
+     * @param either_tag_set
+     * Tags considered "either", i.e. both header and footer tags.
+     * @param store
+     * Storage method, here an arbitrary callback function.
+     * First three arguments reserved for `key`, `line`, and `line_no`.
+     * @param store_only_comments_ho
+     * If `true`, only comment lines are stored for header-only blocks.
+     * @param store_only_comments_hf
+     * If `true`, only comment lines are stored for header-footer blocks.
+     * @param store_only_comments_e
+     * If `true`, only comment lines are stored for "either" blocks.
+     * @param verbosity
+     * For debugging.
+
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -62,6 +90,11 @@ and arg `store`.
 
 ### Single file, write results into text files in directory `store`
 ```
+*
+     * @param store
+     * Here a path to a directory into which one text file will be written for
+     * each key.
+
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -82,6 +115,10 @@ and arg `store`.
 
 ### Multiple files, `store` templated out
 ```
+*
+     * @param file_paths
+     * One or more file paths to process.
+
     template<typename T>
     void extract(
         const std::vector<std::string>& file_paths,
@@ -97,7 +134,7 @@ and arg `store`.
         const bool& store_only_comments_hf = false,
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
-    )    
+    )
 ```
 
 ## Examples

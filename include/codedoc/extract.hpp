@@ -15,7 +15,7 @@
 namespace extract {
     // @docstart README.md
     // ## Features
-    // 
+    //
     // The main feature of this library is extraction of documentation
     // contained within comments. This library does not prepare .html or other
     // documents for you --- it simply extracts what you have written into
@@ -24,15 +24,47 @@ namespace extract {
     // a larger document out of the smaller ones. This README.md has been
     // produced simply by extracting documentation comments from source files
     // directly into the README.md.
-    // 
+    //
     // ## Main functions
-    // 
+    //
     // You may only need `codedoc::extract::extract` or one of its signatures,
     // which currently vary wrt. the first argument (`file_path` / `file_paths`)
     // and arg `store`.
-    // 
+    //
     // ### Single file, arbitrary store callback function `store`
     // ```
+    /**
+     * @brief
+     * Extract commented documentation from text file.
+     * @param file_path
+     * Path to file from which to extract documentation.
+     * @param multiline_comment_start
+     * Regex to identify multiline comment starts, e.g. "[/][*]".
+     * @param multiline_comment_stop
+     * Regex to identify multiline comment stops, e.g. "[*][/]".
+     * @param singleline_comment
+     * Regex to identify single line comments, e.g. "//".
+     * @param header_only_tag_set
+     * Tags considered header-only tags. E.g. `{"@doc"}`.
+     * @param header_tag_set
+     * Tags considered header tags in header-footer pairs. E.g. `{"@docstart"}`.
+     * @param footer_tag_set
+     * Tags considered footer tags in header-footer pairs. E.g. `{"@docstop"}`.
+     * @param either_tag_set
+     * Tags considered "either", i.e. both header and footer tags.
+     * E.g. `{"@doc"}`.
+     * @param store
+     * Storage method, here an arbitrary callback function.
+     * First three arguments reserved for `key`, `line`, and `line_no`.
+     * @param store_only_comments_ho
+     * If `true`, only comment lines are stored for header-only blocks.
+     * @param store_only_comments_hf
+     * If `true`, only comment lines are stored for header-footer blocks.
+     * @param store_only_comments_e
+     * If `true`, only comment lines are stored for "either" blocks.
+     * @param verbosity
+     * For debugging.
+    */
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -49,7 +81,7 @@ namespace extract {
         const int& verbosity = 0
     )
     // ```
-    // 
+    //
     // @docstop README.md
     {
         // function body begins ------------------------------------------------
@@ -72,7 +104,7 @@ namespace extract {
         std::regex re_mlc_start = std::regex(multiline_comment_start);
         std::regex re_mlc_stop = std::regex(multiline_comment_stop);
         std::regex re_slc = std::regex(singleline_comment);
-        
+
         std::string clean_re_prefix = "[ ]*";
         std::string clean_re_suffix = "[ ]?";
         std::vector<std::regex> clean_re_set;
@@ -84,12 +116,12 @@ namespace extract {
                 clean_re_prefix + multiline_comment_stop + clean_re_suffix
             ));
         }
-        if (search_for_singleline_comments) {            
+        if (search_for_singleline_comments) {
             clean_re_set.push_back(std::regex(
                 clean_re_prefix + singleline_comment + clean_re_suffix
             ));
         }
-        
+
         // comment detection prep ends -----------------------------------------
         // key search prep begins ----------------------------------------------
         keysets::KeySet key_set_ho;
@@ -110,14 +142,14 @@ namespace extract {
         std::regex re_e;
         if (search_for_e) {
             re_e = utils::tag_set_to_regex(either_tag_set);
-        }        
+        }
         // header_only ---------------------------------------------------------
         bool search_for_ho = header_only_tag_set.size() > 0;
         std::regex re_ho;
         if (search_for_ho) {
             re_ho = utils::tag_set_to_regex(header_only_tag_set);
         }
-        
+
         // key search prep ends ------------------------------------------------
         // while loop preparation begins ---------------------------------------
         if (verbosity >= 1) {
@@ -141,7 +173,7 @@ namespace extract {
 
             // comment line detection begins -----------------------------------
             // multiline comment detection -------------------------------------
-            bool is_multiline_comment_start = false;            
+            bool is_multiline_comment_start = false;
             bool is_multiline_comment_stop = false;
             if (search_for_multiline_comments) {
                 if (in_multiline_comment) {
@@ -170,7 +202,7 @@ namespace extract {
                 is_singleline_comment = utils::re_detect(line, re_slc);
                 is_comment_line = is_singleline_comment;
             }
-            
+
             // comment detection verbosity -------------------------------------
             if (verbosity >= 2) {
                 utils::print(is_multiline_comment_start, "is_multiline_comment_start");
@@ -224,7 +256,7 @@ namespace extract {
                     }
                 }
             }
-                        
+
             // detect header_only ----------------------------------------------
             // e.g. "// @chunk my_key"
             std::string key_ho = "";
@@ -249,7 +281,7 @@ namespace extract {
                 utils::print(key_set_e.get(), "key_set_e.get()");
                 utils::print(line_has_key, "line_has_key");
             }
-            
+
             // key detection verbosity ends ------------------------------------
             // store begins ----------------------------------------------------
             bool store_hf = !line_has_key &&
@@ -311,7 +343,7 @@ namespace extract {
         if (key_set_hf_at_end.size() > 0) {
             throw keysets::KeySetNotEmptyException(key_set_hf_at_end);
         }
-        
+
         if (verbosity >= 1) {
             std::cout <<
                 "codedoc::extract::extract: while loop done --- processed "
@@ -321,11 +353,16 @@ namespace extract {
         // final checks end ----------------------------------------------------
         // function body ends --------------------------------------------------
     }
-    
+
     // @docstart README.md
-    // 
+    //
     // ### Single file, write results into text files in directory `store`
     // ```
+    /**
+     * @param store
+     * Here a path to a directory into which one text file will be written for
+     * each key.
+    */
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -342,7 +379,7 @@ namespace extract {
         const int& verbosity = 0
     )
     // ```
-    // 
+    //
     // @docstop README.md
     {
         if (!utils::file_is_accessible(store)) {
@@ -370,9 +407,13 @@ namespace extract {
     }
 
     // @docstart README.md
-    // 
+    //
     // ### Multiple files, `store` templated out
     // ```
+    /**
+     * @param file_paths
+     * One or more file paths to process.
+    */
     template<typename T>
     void extract(
         const std::vector<std::string>& file_paths,
@@ -388,9 +429,9 @@ namespace extract {
         const bool& store_only_comments_hf = false,
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
-    )    
+    )
     // ```
-    // 
+    //
     // @docstop README.md
     {
         for (std::string file_path : file_paths) {
