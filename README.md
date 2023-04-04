@@ -5,6 +5,7 @@
 Simply include this library as a sub-dir in your project and `include`
 `./include/codedoc/codedoc.hpp` in your code. E.g. in a directory structure
 
+```
 my_project
     my_file.hpp
     codedoc/
@@ -12,6 +13,7 @@ my_project
             codedoc/
                 codedoc.hpp
                 ...
+```
 
 you can use this line in `my_file.hpp`:
 
