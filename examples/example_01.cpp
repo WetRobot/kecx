@@ -10,7 +10,7 @@ int main() {
     std::vector<std::string> hf_f = {"@stop"};
     std::vector<std::string> e    = {"@block"};
     codedoc::extract::extract(
-        "data/input_01.cpp",
+        "./examples/data/input_01.cpp",
         "[/][*]",
         "[*][/]",
         "//",
@@ -18,10 +18,11 @@ int main() {
         hf_h,
         hf_f,
         e,
-        store::store_default,
+        "./output/",
         true,
         false,
-        false
+        false,
+        1
     );
     return(0);
 }

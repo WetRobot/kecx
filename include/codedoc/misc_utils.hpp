@@ -7,6 +7,7 @@
 #include <iostream>
 #include <regex>
 #include <functional>
+#include <sys/stat.h>
 
 namespace utils{
     template<typename T>
@@ -112,6 +113,39 @@ namespace utils{
         s += ")[ ]*(" + key_regex_string() + ")[ ]*$";
         std::regex r = std::regex(s);
         return(r);
+    }
+
+    
+    template<typename T>
+    void print(const T& x, const std::string& x_nm) {
+        std::cout << x_nm << " = " << x << std::endl;
+    }
+    void print(const std::string& x, const std::string& x_nm) {
+        std::cout << x_nm << " = \"" << x << "\"" << std::endl;
+    }
+    template<typename T>
+    void print(const std::vector<T>& x, const std::string& x_nm) {
+        std::string msg = x_nm + " = [";
+        for (T x_elem : x) {
+            msg += x_elem;
+            msg += ", ";
+        }
+        if (x.size() > 0) {
+            msg.pop_back(); // rm trailing ", "
+            msg.pop_back(); // rm trailing ", "
+        }
+        msg += "]";
+        std::cout << msg << std::endl;
+    }
+
+    void press_enter_to_proceed() {
+        std::cout << "press enter to proceed" << std::endl;
+        std::cin.ignore();
+    }
+
+    bool file_is_accessible(const std::string& file_path) {
+        struct stat buffer;   
+        return (stat (file_path.c_str(), &buffer) == 0); 
     }
 
 }

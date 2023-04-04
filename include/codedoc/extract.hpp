@@ -26,8 +26,16 @@ namespace extract {
         const store::store_type& store = store::store_default,
         const bool& store_only_comments_ho = true,
         const bool& store_only_comments_hf = true,
-        const bool& store_only_comments_e = true
+        const bool& store_only_comments_e = true,
+        const int& verbosity = 0
     ) {
+        if (!utils::file_is_accessible(file_path)) {
+            throw std::invalid_argument(
+                "file_path = \""
+                + file_path
+                + "\" is not accessible --- does it exist?"
+            );
+        }
         std::ifstream file_connection;
         file_connection.open(file_path);
 
@@ -84,12 +92,22 @@ namespace extract {
         }
 
         // begin loop over lines -----------------------------------------------
+        if (verbosity >= 1) {
+            std::cout <<
+                "codedoc::extract::extract: preparations done --- "
+                << "starting while loop over lines"
+                << std::endl;
+        }
         int line_no = -1;
         std::string line;
         bool is_comment_line = false;
         bool in_multiline_comment = false;
         while (std::getline(file_connection, line)) {
             line_no += 1;
+            if (verbosity >= 2) {
+                utils::print(line_no, "line_no");
+            }
+
             // detect whether in comment line ----------------------------------
             if (search_for_multiline_comments) {
                 if (in_multiline_comment) {
@@ -101,6 +119,10 @@ namespace extract {
                         in_multiline_comment = false;
                         is_comment_line = true;
                     }
+                    if (verbosity >= 2) {
+                        utils::print(is_multiline_comment_stop, "is_multiline_comment_stop");
+                        utils::print(in_multiline_comment, "in_multiline_comment");
+                    }
                 } else {
                     // check whether multiline starts here
                     bool is_multiline_comment_start = utils::re_detect(
@@ -110,12 +132,21 @@ namespace extract {
                         in_multiline_comment = true;
                         is_comment_line = true;
                     }
+                    
+                    if (verbosity >= 2) {
+                        utils::print(is_multiline_comment_start, "is_multiline_comment_start");
+                        utils::print(in_multiline_comment, "in_multiline_comment");
+                    }
+                       
 
                 }
             }
-
             if (!in_multiline_comment && search_for_singleline_comments) {
-                is_comment_line = utils::re_detect(line, re_slc);
+                bool is_singleline_comment = utils::re_detect(line, re_slc);
+                is_comment_line = is_singleline_comment;
+                if (verbosity >= 2) {
+                    utils::print(is_singleline_comment, "is_singleline_comment");
+                }
             }
 
             // detect header_only ----------------------------------------------
@@ -174,6 +205,17 @@ namespace extract {
                     }
                 }
             }
+            // debug printing --------------------------------------------------
+            if (verbosity >= 2) {
+                utils::print(line, "line");
+                utils::print(key_set_ho.get(), "key_set_ho.get()");
+                utils::print(key_set_hf.get(), "key_set_hf.get()");
+                utils::print(key_set_e.get(), "key_set_e.get()");
+                utils::print(line_has_key, "line_has_key");
+                if (verbosity >= 3) {
+                    utils::press_enter_to_proceed();
+                }
+            }
 
             // store -----------------------------------------------------------
             if (!line_has_key) {
@@ -202,6 +244,13 @@ namespace extract {
         if (key_set_hf_at_end.size() > 0) {
             throw keysets::KeySetNotEmptyException(key_set_hf_at_end);
         }
+        
+        if (verbosity >= 1) {
+            std::cout <<
+                "codedoc::extract::extract: while loop done --- processed "
+                << line_no << " lines in total"
+                << std::endl;
+        }
     }
     
     void extract(
@@ -216,8 +265,16 @@ namespace extract {
         const std::string& store,
         const bool& store_only_comments_ho = true,
         const bool& store_only_comments_hf = true,
-        const bool& store_only_comments_e = true
+        const bool& store_only_comments_e = true,
+        const int& verbosity = 0
     ) {
+        if (!utils::file_is_accessible(store)) {
+            std::string msg = "";
+            msg += "Cannot access dir path store = ";
+            msg += "\"" + store + "\"" + "; ";
+            msg += "does it exist?";
+            throw std::invalid_argument(msg);
+        }
         extract(
             file_path,
             multiline_comment_start,
@@ -227,7 +284,11 @@ namespace extract {
             header_tag_set,
             footer_tag_set,
             either_tag_set,
-            store::store_to_txt_factory(store)
+            store::store_to_txt_factory(store),
+            true,
+            true,
+            true,
+            verbosity
         );
     }
 } // namespace extract
