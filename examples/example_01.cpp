@@ -5,6 +5,8 @@
 #include "./include/codedoc/codedoc.hpp"
 
 int main() {
+    // @doc README.md
+    // - `./examples/example_01.cpp`
     std::vector<std::string> ho   = {"@chunk"};
     std::vector<std::string> hf_h = {"@start"};
     std::vector<std::string> hf_f = {"@stop"};

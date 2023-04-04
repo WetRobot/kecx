@@ -40,7 +40,7 @@ namespace store{
             const int& line_no
         ) -> void
         {
-            std::string output_file_path = output_dir_path + key + ".txt";
+            std::string output_file_path = output_dir_path + key;
             std::fstream file_connection;
             file_connection.open(
                 output_file_path,
