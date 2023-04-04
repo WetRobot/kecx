@@ -15,7 +15,7 @@
 namespace extract {
     /*
     @docstart README.md
-    # Features
+    ## Features
 
     The main feature of this library is extraction of documentation
     contained within comments. This library does not prepare .html or other
@@ -26,13 +26,13 @@ namespace extract {
     produced simply by extracting documentation comments from source files
     directly into the README.md.
 
-    # Main functions
+    ## Main functions
 
     You may only need `codedoc::extract::extract` or one of its signatures,
     which currently vary wrt. the first argument (`file_path` / `file_paths`)
     and arg `store`.
 
-    ## Single file, arbitrary store callback function `store`
+    ### Single file, arbitrary store callback function `store`
     ```
     */
     void extract(
@@ -269,7 +269,12 @@ namespace extract {
             std::string clean_line = line;
             if (store_any) {
                 for (auto clean_re : clean_re_set) {
-                    clean_line = std::regex_replace(clean_line, clean_re, "");
+                    clean_line = std::regex_replace(
+                        clean_line,
+                        clean_re,
+                        "",
+                        std::regex_constants::format_first_only
+                    );
                 }
                 if (store_hf) {
                     for (std::string key : key_set_hf.get()) {
@@ -324,7 +329,7 @@ namespace extract {
     /*
     @docstart README.md
 
-    ## Single file, write results into text files in directory `store`
+    ### Single file, write results into text files in directory `store`
     ```
     */
     void extract(
@@ -375,7 +380,7 @@ namespace extract {
     /*
     @docstart README.md
 
-    ## Multiple files, `store` templated out
+    ### Multiple files, `store` templated out
     ```
     */
     template<typename T>

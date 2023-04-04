@@ -7,7 +7,9 @@
 /*
 @doc README.md
 
-# Using this library
+# `codedoc.cpp`
+
+## Using this library
 
 Simply include this library as a sub-dir in your project and `include`
 `./include/codedoc/codedoc.hpp` in your code. E.g. in a directory structure
