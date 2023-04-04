@@ -13,28 +13,26 @@
 #include "store.hpp"
 
 namespace extract {
-    /*
-    @docstart README.md
-    ## Features
-
-    The main feature of this library is extraction of documentation
-    contained within comments. This library does not prepare .html or other
-    documents for you --- it simply extracts what you have written into
-    comments into a location of your choice. Normally you would extract
-    documentation from your comments into text files and produce
-    a larger document out of the smaller ones. This README.md has been
-    produced simply by extracting documentation comments from source files
-    directly into the README.md.
-
-    ## Main functions
-
-    You may only need `codedoc::extract::extract` or one of its signatures,
-    which currently vary wrt. the first argument (`file_path` / `file_paths`)
-    and arg `store`.
-
-    ### Single file, arbitrary store callback function `store`
-    ```
-    */
+    // @docstart README.md
+    // ## Features
+    // 
+    // The main feature of this library is extraction of documentation
+    // contained within comments. This library does not prepare .html or other
+    // documents for you --- it simply extracts what you have written into
+    // comments into a location of your choice. Normally you would extract
+    // documentation from your comments into text files and produce
+    // a larger document out of the smaller ones. This README.md has been
+    // produced simply by extracting documentation comments from source files
+    // directly into the README.md.
+    // 
+    // ## Main functions
+    // 
+    // You may only need `codedoc::extract::extract` or one of its signatures,
+    // which currently vary wrt. the first argument (`file_path` / `file_paths`)
+    // and arg `store`.
+    // 
+    // ### Single file, arbitrary store callback function `store`
+    // ```
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -50,11 +48,9 @@ namespace extract {
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )
-    /*
-    ```
-
-    @docstop README.md
-    */
+    // ```
+    // 
+    // @docstop README.md
     {
         // function body begins ------------------------------------------------
         // file_path open begins -----------------------------------------------
@@ -326,12 +322,10 @@ namespace extract {
         // function body ends --------------------------------------------------
     }
     
-    /*
-    @docstart README.md
-
-    ### Single file, write results into text files in directory `store`
-    ```
-    */
+    // @docstart README.md
+    // 
+    // ### Single file, write results into text files in directory `store`
+    // ```
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -347,11 +341,9 @@ namespace extract {
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )
-    /*
-    ```
-    
-    @docstop README.md
-    */
+    // ```
+    // 
+    // @docstop README.md
     {
         if (!utils::file_is_accessible(store)) {
             std::string msg = "";
@@ -377,12 +369,10 @@ namespace extract {
         );
     }
 
-    /*
-    @docstart README.md
-
-    ### Multiple files, `store` templated out
-    ```
-    */
+    // @docstart README.md
+    // 
+    // ### Multiple files, `store` templated out
+    // ```
     template<typename T>
     void extract(
         const std::vector<std::string>& file_paths,
@@ -399,11 +389,9 @@ namespace extract {
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )    
-    /*
-    ```
-    
-    @docstop README.md
-    */
+    // ```
+    // 
+    // @docstop README.md
     {
         for (std::string file_path : file_paths) {
             extract(

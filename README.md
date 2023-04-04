@@ -23,26 +23,25 @@ you can use this line in `my_file.hpp`:
 #include "./codedoc/include/codedoc/codedoc.hpp"
 ```
 
-    ## Features
+## Features
 
-    The main feature of this library is extraction of documentation
-    contained within comments. This library does not prepare .html or other
-    documents for you --- it simply extracts what you have written into
-    comments into a location of your choice. Normally you would extract
-    documentation from your comments into text files and produce
-    a larger document out of the smaller ones. This README.md has been
-    produced simply by extracting documentation comments from source files
-    directly into the README.md.
+The main feature of this library is extraction of documentation
+contained within comments. This library does not prepare .html or other
+documents for you --- it simply extracts what you have written into
+comments into a location of your choice. Normally you would extract
+documentation from your comments into text files and produce
+a larger document out of the smaller ones. This README.md has been
+produced simply by extracting documentation comments from source files
+directly into the README.md.
 
-    ## Main functions
+## Main functions
 
-    You may only need `codedoc::extract::extract` or one of its signatures,
-    which currently vary wrt. the first argument (`file_path` / `file_paths`)
-    and arg `store`.
+You may only need `codedoc::extract::extract` or one of its signatures,
+which currently vary wrt. the first argument (`file_path` / `file_paths`)
+and arg `store`.
 
-    ### Single file, arbitrary store callback function `store`
-    ```
-
+### Single file, arbitrary store callback function `store`
+```
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -58,13 +57,11 @@ you can use this line in `my_file.hpp`:
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )
+```
 
-    ```
 
-
-    ### Single file, write results into text files in directory `store`
-    ```
-
+### Single file, write results into text files in directory `store`
+```
     void extract(
         const std::string& file_path,
         const std::string& multiline_comment_start,
@@ -80,13 +77,11 @@ you can use this line in `my_file.hpp`:
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )
+```
 
-    ```
-    
 
-    ### Multiple files, `store` templated out
-    ```
-
+### Multiple files, `store` templated out
+```
     template<typename T>
     void extract(
         const std::vector<std::string>& file_paths,
@@ -103,9 +98,8 @@ you can use this line in `my_file.hpp`:
         const bool& store_only_comments_e  = false,
         const int& verbosity = 0
     )    
+```
 
-    ```
-    
 ## Examples
 
 See the following files for examples:
