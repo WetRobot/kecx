@@ -5,7 +5,7 @@
 
 int main() {
     // @doc README.md
-    // - `./doc/make_readme.cpp`
+    // - `./doc/make_readme.cpp`: A tiny c++ programme to populate `README.md`.
     std::vector<std::string> ho   = {"@doc"};
     std::vector<std::string> hf_h = {"@docstart"};
     std::vector<std::string> hf_f = {"@docstop"};
@@ -45,7 +45,8 @@ int main() {
 
     std::vector<std::string> more_file_paths = {
         "./doc/make_readme.cpp",
-        "./examples/example_01.cpp"
+        "./examples/example_01.cpp",
+        "./examples/example_02.cpp"
     };
     kecx::extract::extract(
         more_file_paths,

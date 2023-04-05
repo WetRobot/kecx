@@ -189,6 +189,12 @@ and arg `store`.
 
 See the following files for examples:
 
-- `./doc/make_readme.sh`
-- `./doc/make_readme.cpp`
-- `./examples/example_01.cpp`
+- `./doc/make_readme.sh`: A simple shell script which compiles a tiny c++
+  programme that in turn makes `README.md`.
+- `./doc/make_readme.cpp`: A tiny c++ programme to populate `README.md`.
+- `./examples/example_01.cpp`: A straightforward example of extracting
+  various kinds of keyed comments from `./examples/data/input_01.cpp`.
+- `./examples/example_02.cpp`: You can actually use `kecx` for other
+  purposes also though this was not on purpose. Here is shown how you
+  can separate `./examples/data/input_02.md` into separate files by
+  section.
