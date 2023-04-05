@@ -27,7 +27,7 @@ namespace extract {
     //
     // ## Main functions
     //
-    // You may only need `codedoc::extract::extract` or one of its signatures,
+    // You may only need `kecx::extract::extract` or one of its signatures,
     // which currently vary wrt. the first argument (`file_path` / `file_paths`)
     // and arg `store`.
     //
@@ -154,7 +154,7 @@ namespace extract {
         // while loop preparation begins ---------------------------------------
         if (verbosity >= 1) {
             std::cout <<
-                "codedoc::extract::extract: preparations done --- "
+                "kecx::extract::extract: preparations done --- "
                 << "starting while loop over lines"
                 << std::endl;
         }
@@ -346,7 +346,7 @@ namespace extract {
 
         if (verbosity >= 1) {
             std::cout <<
-                "codedoc::extract::extract: while loop done --- processed "
+                "kecx::extract::extract: while loop done --- processed "
                 << line_no << " lines in total"
                 << std::endl;
         }

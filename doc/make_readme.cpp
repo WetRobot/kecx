@@ -1,7 +1,7 @@
 #include<vector>
 #include<string>
 
-#include "./include/codedoc/codedoc.hpp"
+#include "./include/kecx/kecx.hpp"
 
 int main() {
     // @doc README.md
@@ -11,11 +11,11 @@ int main() {
     std::vector<std::string> hf_f = {"@docstop"};
     std::vector<std::string> e    = {};
     std::vector<std::string> file_paths = {
-        "include/codedoc/codedoc.hpp",
-        "include/codedoc/extract.hpp"
+        "include/kecx/kecx.hpp",
+        "include/kecx/extract.hpp"
     };
 
-    codedoc::extract::extract(
+    kecx::extract::extract(
         file_paths,
         "[/][*]",
         "[*][/]",
@@ -31,7 +31,7 @@ int main() {
         0
     );
     
-    codedoc::extract::extract(
+    kecx::extract::extract(
         "./doc/make_readme.sh",
         "",
         "",
@@ -47,7 +47,7 @@ int main() {
         "./doc/make_readme.cpp",
         "./examples/example_01.cpp"
     };
-    codedoc::extract::extract(
+    kecx::extract::extract(
         more_file_paths,
         "[/][*]",
         "[*][/]",

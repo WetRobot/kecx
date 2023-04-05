@@ -11,9 +11,9 @@
 #include "misc_utils.hpp"
 
 namespace keysets{
-    class KeyAlreadyExiscodedocxception : public std::exception {
+    class KeyAlreadyExiskecxxception : public std::exception {
         public:
-            KeyAlreadyExiscodedocxception(const std::string& key) : key_(key) {}
+            KeyAlreadyExiskecxxception(const std::string& key) : key_(key) {}
 
             const char* what() const noexcept override {
                 std::string msg = 
@@ -67,7 +67,7 @@ namespace keysets{
 
             void activate(const std::string& key) {
                 if (in_key_set(key)) {
-                    throw KeyAlreadyExiscodedocxception(key);
+                    throw KeyAlreadyExiskecxxception(key);
                 } else {
                     key_set.push_back(key);
                 }

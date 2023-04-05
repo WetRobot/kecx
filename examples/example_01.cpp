@@ -2,7 +2,7 @@
 #include<vector>
 #include<string>
 
-#include "./include/codedoc/codedoc.hpp"
+#include "./include/kecx/kecx.hpp"
 
 int main() {
     // @doc README.md
@@ -11,7 +11,7 @@ int main() {
     std::vector<std::string> hf_h = {"@start"};
     std::vector<std::string> hf_f = {"@stop"};
     std::vector<std::string> e    = {"@block"};
-    codedoc::extract::extract(
+    kecx::extract::extract(
         "./examples/data/input_01.cpp",
         "[/][*]",
         "[*][/]",
