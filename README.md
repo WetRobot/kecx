@@ -194,7 +194,12 @@ See the following files for examples:
 - `./doc/make_readme.cpp`: A tiny c++ programme to populate `README.md`.
 - `./examples/example_01.cpp`: A straightforward example of extracting
   various kinds of keyed comments from `./examples/data/input_01.cpp`.
-- `./examples/example_02.cpp`: You can actually use `kecx` for other
+- `./examples/example_02.cpp`: Extract doxygen comments in
+  `./examples/data/input_02.cpp` into separate text files --- though
+  some clean-up work remains. Also, multiple function definitions
+  in the same file would currently be a problem as arguments with
+  the same name would be inserted into the same output file.
+- `./examples/example_03.cpp`: You can actually use `kecx` for other
   purposes also though this was not on purpose. Here is shown how you
   can separate `./examples/data/input_02.md` into separate files by
   section.
