@@ -1,13 +1,13 @@
 #ifndef kecx_HPP
 #define kecx_HPP
 
-#include "store.hpp"
-#include "extract.hpp"
+#include "./tools/store.hpp"
+#include "./tools/extract.hpp"
 
 /*
 @doc README.md
 
-# `kecx.cpp`
+# `kecx` --- KEyed Comment eXtractor
 
 ## Using this library
 

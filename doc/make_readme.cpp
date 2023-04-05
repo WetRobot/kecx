@@ -12,7 +12,7 @@ int main() {
     std::vector<std::string> e    = {};
     std::vector<std::string> file_paths = {
         "include/kecx/kecx.hpp",
-        "include/kecx/extract.hpp"
+        "include/kecx/tools/extract.hpp"
     };
 
     kecx::extract::extract(
