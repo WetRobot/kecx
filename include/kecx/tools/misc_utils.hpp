@@ -10,6 +10,18 @@
 #include <sys/stat.h>
 
 namespace utils{
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Get position of first match of `x` in `y`. If there is no match,
+     * return `-1`.
+     * @param x
+     * Object to match in `y`.
+     * @param y
+     * Vector of objects.
+    */
     template<typename T>
     int match_first(const T& x, const std::vector<T>& y) {
         int m = -1;
@@ -24,24 +36,20 @@ namespace utils{
         return(m);
     } 
 
-    template<typename T>
-    bool is_in(T &x, std::vector<T> &y) {
-        return(match(x, y) != -999);
-    }
-
-    template<typename T>
-    std::vector<T> vector_subset(
-        std::vector<T> &x, 
-        std::vector<int> &keep_indices
-    ) {
-        std::vector<T> x_subset(keep_indices.size());
-        for (int i = 0; i < keep_indices.size(); i++) {
-            int keep_idx = keep_indices[i];
-            x_subset[i] = x[keep_idx];
-        }
-        return(x_subset);
-    }
-
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Return `true` if string `x` matches regex `r`, else `false`.
+     * Uses `std::regex_search`.
+     * @param x
+     * A string.
+     * @param r
+     * A regex.
+     * @param args
+     * Additional arbitrary arguments passed to `std::regex_search`.
+    */
     template <typename... Args>
     bool re_detect(
         const std::string& x, 
@@ -56,6 +64,20 @@ namespace utils{
         return(out);
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Return extracted part of `x` that matches `r`. If there is no match,
+     * return `""`.
+     * @param x
+     * A string.
+     * @param r
+     * A regex.
+     * @param args
+     * Additional arbitrary arguments passed to `std::regex_search`.
+    */
     template <typename... Args>
     std::string re_extract(
         const std::string& x,
@@ -69,23 +91,20 @@ namespace utils{
         }
         return(out);
     }
-    
-    template <typename... Args>
-    std::string re_extract_group(
-        const std::string& x,
-        const std::regex& r,
-        const int n,
-        Args... args
-    ) {
-        std::smatch m;
-        std::string out = "";
-        if (std::regex_search(x, m, r, args...)) {
-            out = m[n].str();
-        }
-        return(out);
-    }
 
-
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Return last capture group of match in string `x` against regex `r`.
+     * @param x
+     * A string.
+     * @param r
+     * A regex.
+     * @param args
+     * Additional arbitrary arguments passed to `std::regex_search`.
+    */
     template <typename... Args>
     std::string re_extract_last_group(
         const std::string& x,
@@ -100,10 +119,27 @@ namespace utils{
         return(out);
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Defines what a key is allowed to look like. Currently allowed to contain
+     * any characters on the same line (after the tag and any whitespace).
+    */
     std::string key_regex_string() {
         return(".+");
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Returns a regex which matches any tag supplied via `tag_set`
+     * plus any interim whitespaces, the key, and any trailing whitespaces.
+     * The key is in the last capture group of the regex.
+    */
     std::regex tag_set_to_regex(const std::vector<std::string>& tag_set) {
         std::string s = "(";
         for (std::string tag : tag_set) {
@@ -115,14 +151,48 @@ namespace utils{
         return(r);
     }
 
-    
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Printing for debugging.
+     * @param x
+     * Any object.
+     * @param x_nm
+     * Name of object in debug message.
+    */
     template<typename T>
     void print(const T& x, const std::string& x_nm) {
         std::cout << x_nm << " = " << x << std::endl;
     }
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Printing for debugging.
+     * @param x
+     * Any object.
+     * @param x_nm
+     * Name of object in debug message.
+    */
     void print(const std::string& x, const std::string& x_nm) {
         std::cout << x_nm << " = \"" << x << "\"" << std::endl;
     }
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Printing for debugging.
+     * @param x
+     * Any vector object.
+     * @param x_nm
+     * Name of object in debug message.
+    */
     template<typename T>
     void print(const std::vector<T>& x, const std::string& x_nm) {
         std::string msg = x_nm + " = [";
@@ -138,16 +208,36 @@ namespace utils{
         std::cout << msg << std::endl;
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Requests user to press enter to proceed. Used in debugging.
+    */
     void press_enter_to_proceed() {
         std::cout << "press enter to proceed" << std::endl;
         std::cin.ignore();
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Returns `true` if file is accessible (exists + you have permission to
+     * read), else `false`.
+     * @param file_path
+     * Path to a file.
+    */
     bool file_is_accessible(const std::string& file_path) {
         struct stat buffer;   
         return (stat (file_path.c_str(), &buffer) == 0); 
     }
 
-}
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+} // namespace utils
 
-#endif // UTILS
+#endif // UTILS_HPP

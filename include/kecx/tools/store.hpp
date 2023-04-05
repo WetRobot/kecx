@@ -9,6 +9,10 @@
 #include <functional>
 
 namespace store{
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
     typedef
         std::function<void(
             const std::string& key,
@@ -17,6 +21,21 @@ namespace store{
         )>
         store_type;
     
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Default function to handle storing extraction results.
+     * Writes extracted line into e.g. `./output/x.txt` when `key = "x"`.
+     * Note the extensions `.txt` that is always added.
+     * @param key
+     * Store data for this key.
+     * @param line
+     * Store this line.
+     * @param line_no
+     * Line number not stored anywhere by default.
+    */
     void store_default(
         const std::string& key,
         const std::string& line,
@@ -33,6 +52,17 @@ namespace store{
         }
     }
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    /**
+     * @brief
+     * Outputs a function which in turn stores extracted line into
+     * `output_dir_path` (e.g. `"./output/x"` for `key = "x").
+     * Note, no file extension added.
+     * @param output_dir_path
+     * Path to directory into which the output function will write data.
+    */
     auto store_to_txt_factory(std::string output_dir_path) {
         return [&](
             const std::string& key,
@@ -51,6 +81,9 @@ namespace store{
             }
         };
     }
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 } // namespace store
 
 #endif
